@@ -11,31 +11,31 @@ RSpec.describe UsersController, type: :controller do
   describe "POST #create" do
     context "with invalid params" do
       it "validates the presence of the user's email and password" do
-        post :create, {user_name: 'joe'}
+        post :create, { :user => { user_name: 'joe' } }
         expect(flash[:errors]).to_not be_nil
         expect(response).to render_template("new")
       end
       it "validates that the password is at least 6 characters long" do
-        post :create, {user_name: 'joe', password: 'abcd'}
+        post :create, { :user => { user_name: 'joe', password: 'abcd'} }
         expect(flash[:errors]).to_not be_nil
         expect(response).to render_template("new")
       end
     end
     context "with valid params" do
       it "redirects user to the current user\'s showpage" do
-        post :create, { user_name: 'joe', password: 'abcdef' }
-        it { should redirect_to(user_url(User.last)) }
-        it { should redirect_to(action: :show) }
+        post :create, { :user => { user_name: 'joe', password: 'abcdef'} }
+        expect(response).to redirect_to(user_url(User.last))
+        # expect(response).to redirect_to(action: "show")
       end
     end
   end
 
   describe "GET #show" do
     it "renders the show template" do
-      post :create, { user_name: 'alex', password: 'password' }
+      post :create, { :user => { user_name: 'alex', password: 'password' } }
       get :show, id: User.last.id
 
-      it { should render_template("show") }
+      expect(response).to render_template("show")
     end
   end
 
@@ -43,7 +43,7 @@ RSpec.describe UsersController, type: :controller do
     it "renders the index template" do
       get :index
 
-      it { should render_template("index") }
+      expect(response).to render_template("index")
     end
   end
 end
