@@ -55,4 +55,6 @@ Rails.application.routes.draw do
   #   end
 
   resources :users, only: [:new, :create, :show, :index]
+
+  root :to => 'users#index'
 end
