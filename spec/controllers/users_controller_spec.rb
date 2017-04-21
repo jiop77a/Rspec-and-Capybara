@@ -29,4 +29,21 @@ RSpec.describe UsersController, type: :controller do
       end
     end
   end
+
+  describe "GET #show" do
+    it "renders the show template" do
+      post :create, { user_name: 'alex', password: 'password' }
+      get :show, id: User.last.id
+
+      it { should render_template("show") }
+    end
+  end
+
+  describe "GET #index" do
+    it "renders the index template" do
+      get :index
+
+      it { should render_template("index") }
+    end
+  end
 end
