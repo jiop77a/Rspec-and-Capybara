@@ -15,6 +15,29 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   subject(:user) { FactoryGirl.build(:user) }
 
+  describe "password_digest" do
+    it "sets a password_digest automatically" do
+      expect(user.password_digest).to_not be_nil
+    end
+  end
+
+  describe "::find_by_credentials" do
+    before(:each) { user.save }
+
+    it "returns the user if the password matches the digest" do
+      found_user = User.find_by_credentials(user.user_name,
+                                            user.password)
+      expect(found_user).to_not be_nil
+      expect(found_user.password_digest).to eq(user.password_digest)
+      expect(found_user.user_name).to eq(user.user_name)
+    end
+
+    it "otherwise returns nil" do
+      found_user = User.find_by_credentials(user.user_name, "password")
+      expect(found_user).to be_nil
+    end
+  end
+
   describe "validations" do
     it { should validate_presence_of(:user_name) }
     it { should validate_presence_of(:password_digest) }
